@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace ConsoleApp2
 {
-    internal class Order
+    public class Order
     {
+        // Список допустимых значений района 
         public readonly string[] Districts = ["Central", "Leninsky", "Zaeltsovsky", "Sovetsky", "Zheleznodorozhny"];
 
 
@@ -16,24 +16,29 @@ namespace ConsoleApp2
         public string ID
         {
             get { return _id.ToString(); }
-            set
-            {
-                _id = value;
-            }
         }
         public string Weight
         {
             get { return _weight.ToString(); }
             set
             {
+                var temp = _weight;
                 if (!Int32.TryParse(value, out _weight))
+                {
                     Logger.WriteLog("Ошибка изменения заказа: ID имеет неверный формат", 1);
+                    _weight = temp;
+                }
             }
         }
         public string District
         {
             get { return _district; }
-            set { _district = value; }
+            set { 
+                if (Districts.Contains(value))
+                    _district = value;
+                else
+                    Logger.WriteLog("Ошибка изменения заказа: заданный район не существует", 1);
+            }
         }
         public string DeliveryDate
         {
@@ -43,17 +48,26 @@ namespace ConsoleApp2
             }
             set
             {
-                if (DateTime.TryParseExact(value, "yyyy-dd-MM HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _deliveryDate))
+                var temp = _deliveryDate;
+                if (!DateTime.TryParseExact(value, "yyyy-dd-MM HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _deliveryDate))
+                {
                     Logger.WriteLog("Ошибка изменения заказа: дата имеет неверный формат", 1);
+                    _deliveryDate = temp;
+                }
+                    
             }
         }
 
         public Order(string id, string weight, string district, string datetime)
         {
-            if (Int32.TryParse(weight, out _weight) && Districts.Contains(district))
+            _id = id;
+            
+            if (Int32.TryParse(weight, out _weight))
             {
-                _district = district;
-                _id = id;
+                if (Districts.Contains(district))
+                    _district = district;
+                else 
+                    throw new Exception("Ошибка создания заказа: заданный район не существует");
 
                 if (_weight <= 0 || !DateTime.TryParseExact(datetime, "yyyy-dd-MM HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _deliveryDate))
                 {
@@ -61,8 +75,18 @@ namespace ConsoleApp2
                         (_weight <= 0 ? (@"вес не может быть меньше либо равен нулю") : (@"неверный формат даты")));
                 }
             }
+            else
+            {
+                throw new Exception("Ошибка создания заказа: вес должен быть записан в числовом формате (например, 50)");
+            }
         }
 
+        public DateTime getDate()
+        {
+            return _deliveryDate;
+        }
+
+        // Метод для проверки правильности значений заказа
         public bool isValid()
         {
             if (_weight > 0 && _deliveryDate != DateTime.MinValue)
@@ -71,14 +95,10 @@ namespace ConsoleApp2
             return false;
         }
 
+        // Метод для представления заказа в строковом формате
         public override string ToString()
         {
-            return $"ID = {_id.ToString()}, Weight = {_weight.ToString()}, District = {_district}, Date = {_deliveryDate.ToString()}";
-        }
-
-        public DateTime getDate()
-        {
-            return _deliveryDate;
+            return $"ID = {_id.ToString()}, Weight = {_weight.ToString()}, District = {_district}, Date = {_deliveryDate.ToString("yyyy-dd-MM HH:mm:ss")}";
         }
     }
 }
