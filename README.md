@@ -1,5 +1,7 @@
 # order-filtering
 
+## Для работы нужен .NET 8.0
+
 Компиляция приложения:
 
 В Visual Studio
