@@ -11,7 +11,7 @@
 
 В папке bin/Release/net8.0/ открыть Powershell или cmd и выполнить команду
 
-``` Solution.exe 'input.txt' 'Central' '2024-10-11 08:35:11' 'output.txt' 'history.log' ```
+``` .\Solution.exe 'input.txt' 'Central' '2024-10-11 08:35:11' 'output.txt' 'history.log' ```
 
 Где 
     
