@@ -2,7 +2,7 @@
 
 Компиляция приложения:
 
-В Visual Studio
+В Visual Studio:
     Build -> Build ConsoleApp2
 
 Запуск:
