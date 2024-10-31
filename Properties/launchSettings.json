@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleApp2": {
+      "commandName": "Project",
+      "commandLineArgs": "input.txt Central 2024-11-01\\s08:45:27 output.txt history.log"
+    }
+  }
+}
